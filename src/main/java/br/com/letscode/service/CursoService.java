@@ -2,7 +2,7 @@ package br.com.letscode.service;
 
 import br.com.letscode.exception.IdDoCursoNaoExisteException;
 import br.com.letscode.repository.CursoRepository;
-import br.com.letscode.request.CursoReqAtualizar;
+import br.com.letscode.request.update.CursoReqAtualizar;
 import br.com.letscode.request.CursoRequest;
 import br.com.letscode.response.CursoResponse;
 import lombok.RequiredArgsConstructor;

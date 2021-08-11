@@ -2,7 +2,7 @@ package br.com.letscode.service;
 
 import br.com.letscode.exception.IdDoProfessorNaoExisteException;
 import br.com.letscode.repository.ProfessorRepository;
-import br.com.letscode.request.ProfessorReqAtualizar;
+import br.com.letscode.request.update.ProfessorReqAtualizar;
 import br.com.letscode.request.ProfessorRequest;
 import br.com.letscode.response.ProfessorResponse;
 import lombok.RequiredArgsConstructor;

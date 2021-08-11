@@ -1,6 +1,6 @@
 package br.com.letscode.controller;
 
-import br.com.letscode.request.CursoReqAtualizar;
+import br.com.letscode.request.update.CursoReqAtualizar;
 import br.com.letscode.request.CursoRequest;
 import br.com.letscode.response.CursoResponse;
 import br.com.letscode.service.CursoService;

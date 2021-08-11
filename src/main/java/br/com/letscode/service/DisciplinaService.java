@@ -2,7 +2,7 @@ package br.com.letscode.service;
 
 import br.com.letscode.exception.IdDaDisciplinaNaoExisteException;
 import br.com.letscode.repository.DisciplinaRepository;
-import br.com.letscode.request.DisciplinaReqAtualizar;
+import br.com.letscode.request.update.DisciplinaReqAtualizar;
 import br.com.letscode.request.DisciplinaRequest;
 import br.com.letscode.response.DisciplinaResponse;
 import lombok.RequiredArgsConstructor;

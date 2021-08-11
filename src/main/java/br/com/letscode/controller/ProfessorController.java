@@ -1,7 +1,7 @@
 package br.com.letscode.controller;
 
 
-import br.com.letscode.request.ProfessorReqAtualizar;
+import br.com.letscode.request.update.ProfessorReqAtualizar;
 import br.com.letscode.request.ProfessorRequest;
 import br.com.letscode.response.ProfessorResponse;
 import br.com.letscode.service.ProfessorService;

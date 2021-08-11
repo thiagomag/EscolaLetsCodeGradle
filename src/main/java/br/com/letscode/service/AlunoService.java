@@ -3,7 +3,7 @@ package br.com.letscode.service;
 import br.com.letscode.exception.IdDoAlunoNaoExisteException;
 import br.com.letscode.repository.AlunoRepository;
 import br.com.letscode.repository.CursoRepository;
-import br.com.letscode.request.AlunoReqAtualizar;
+import br.com.letscode.request.update.AlunoReqAtualizar;
 import br.com.letscode.request.AlunoRequest;
 import br.com.letscode.response.AlunoResponse;
 import lombok.RequiredArgsConstructor;

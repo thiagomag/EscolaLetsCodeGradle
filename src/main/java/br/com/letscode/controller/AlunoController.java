@@ -1,6 +1,6 @@
 package br.com.letscode.controller;
 
-import br.com.letscode.request.AlunoReqAtualizar;
+import br.com.letscode.request.update.AlunoReqAtualizar;
 import br.com.letscode.request.AlunoRequest;
 import br.com.letscode.response.AlunoResponse;
 import br.com.letscode.service.AlunoService;

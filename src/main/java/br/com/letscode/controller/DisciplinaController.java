@@ -1,6 +1,6 @@
 package br.com.letscode.controller;
 
-import br.com.letscode.request.DisciplinaReqAtualizar;
+import br.com.letscode.request.update.DisciplinaReqAtualizar;
 import br.com.letscode.request.DisciplinaRequest;
 import br.com.letscode.response.DisciplinaResponse;
 import br.com.letscode.service.DisciplinaService;

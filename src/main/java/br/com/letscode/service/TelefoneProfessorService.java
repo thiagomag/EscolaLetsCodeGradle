@@ -4,7 +4,7 @@ import br.com.letscode.exception.IdDoProfessorNaoExisteException;
 import br.com.letscode.exception.IdDoTelefoneNaoExisteException;
 import br.com.letscode.repository.ProfessorRepository;
 import br.com.letscode.repository.TelefoneProfessorRepository;
-import br.com.letscode.request.TelefoneProfessorReqAtualizar;
+import br.com.letscode.request.update.TelefoneProfessorReqAtualizar;
 import br.com.letscode.request.TelefoneProfessorRequest;
 import br.com.letscode.response.TelefoneProfessorResponse;
 import lombok.RequiredArgsConstructor;

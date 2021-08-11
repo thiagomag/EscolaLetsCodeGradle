@@ -1,4 +1,4 @@
-package br.com.letscode.request;
+package br.com.letscode.request.update;
 
 import br.com.letscode.entity.Curso;
 import br.com.letscode.entity.Modalidade;
