@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("cursoDisciplinaProfessor")
@@ -20,22 +22,22 @@ public class CursoDisciplicaProfessorController {
     private final CursoDisciplinaProfessorService cursoDisciplinaProfessorService;
 
     @GetMapping
-    private Iterable<CursoDisciplinaProfessor> buscarCursosDisciplinaProfessor() {
+    private List<CursoDisciplinaProfessor> buscarCursosDisciplinaProfessor() {
         return cursoDisciplinaProfessorService.buscarCursosDisciplinaProfessor();
     }
 
     @GetMapping("/{codigoCurso}")
-    private Iterable<CursoDisciplinaProfessor> buscarCursosDisciplinaProfessorPorCurso(@PathVariable Integer codigoCurso){
+    private CursoDisciplinaProfessor buscarCursosDisciplinaProfessorPorCurso(@PathVariable Integer codigoCurso){
         return cursoDisciplinaProfessorService.buscarCursosDisciplinaProfessorPorCurso(codigoCurso);
     }
 
     @GetMapping("/{codigoDisiciplina}")
-    private Iterable<CursoDisciplinaProfessor> buscarCursosDisciplinaProfessorPorDisciplina(@PathVariable Integer codigoDisiciplina) {
+    private CursoDisciplinaProfessor buscarCursosDisciplinaProfessorPorDisciplina(@PathVariable Integer codigoDisiciplina) {
         return cursoDisciplinaProfessorService.buscarCursosDisciplinaProfessorPorDisciplina(codigoDisiciplina);
     }
 
     @GetMapping("/{registroProfessor}")
-    private Iterable<CursoDisciplinaProfessor> buscarCursosDisciplinaProfessorPorProfessor(@PathVariable Integer registroProfessor) {
+    private CursoDisciplinaProfessor buscarCursosDisciplinaProfessorPorProfessor(@PathVariable Integer registroProfessor) {
         return cursoDisciplinaProfessorService.buscarCursosDisciplinaProfessorPorProfessor(registroProfessor);
     }
 

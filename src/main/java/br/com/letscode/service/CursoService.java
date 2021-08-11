@@ -1,10 +1,16 @@
 package br.com.letscode.service;
 
-import br.com.letscode.entity.Curso;
 import br.com.letscode.exception.IdDoCursoNaoExisteException;
 import br.com.letscode.repository.CursoRepository;
+import br.com.letscode.request.CursoReqAtualizar;
+import br.com.letscode.request.CursoRequest;
+import br.com.letscode.response.CursoResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -12,49 +18,61 @@ public class CursoService {
 
     private final CursoRepository cursoRepository;
 
-    public Iterable<Curso> buscarCursos() {
-        return cursoRepository.findAll();
+    public List<CursoResponse> buscarCursos() {
+        var cursos = cursoRepository.findAll();
+        return CursoResponse.convert(cursos);
     }
 
-    public Curso buscarPorId(int codigoCurso) {
-        return cursoRepository.findById(codigoCurso)
+    public CursoResponse buscarPorId(Integer codigoCurso) {
+        var curso = cursoRepository.findById(codigoCurso)
                 .orElseThrow(() -> new IdDoCursoNaoExisteException(codigoCurso));
+        return new CursoResponse(curso);
     }
 
-    public Curso adicionarCurso(Curso curso) {
-        return cursoRepository.save(curso);
+    public CursoResponse buscarPorNome(String nome) {
+        var curso = cursoRepository.findByNomeCurso(nome);
+        return new CursoResponse(curso);
     }
 
-    public void deletarCurso(int codigoCurso) {
+    public List<CursoResponse> buscarPorDuracaoMaiorQue(Integer duracao) {
+        var cursos = cursoRepository.findByDuracaoGreaterThan(duracao);
+        return CursoResponse.convert(cursos);
+    }
+
+    public ResponseEntity<CursoResponse> adicionarCurso(CursoRequest cursoRequest,
+                                                        UriComponentsBuilder uriComponentsBuilder) {
+        var curso = cursoRequest.convert();
+        cursoRepository.save(curso);
+        var uri = uriComponentsBuilder.path("/buscarCursos/{codigoCurso}").buildAndExpand(curso
+                .getCodigoCurso()).toUri();
+        return ResponseEntity.created(uri).body(new CursoResponse(curso));
+
+    }
+
+    public ResponseEntity<?> deletarCurso(Integer codigoCurso) {
         if(cursoRepository.findById(codigoCurso).isPresent()) {
             cursoRepository.deleteById(codigoCurso);
+            return ResponseEntity.ok().build();
         } else {
             throw new IdDoCursoNaoExisteException(codigoCurso);
         }
     }
 
-    public Curso atualizarCurso(Curso curso, int codigoCurso) {
-        var cursoPesquisado = cursoRepository.findById(codigoCurso)
-                .orElseThrow(() -> new IdDoCursoNaoExisteException(codigoCurso));
-        validarCurso(curso, cursoPesquisado);
-        return cursoRepository.save(cursoPesquisado);
+    public ResponseEntity<CursoResponse> atualizarCurso(CursoReqAtualizar cursoReqAtualizar, Integer codigoCurso) {
+        var cursoOptional = cursoRepository.findById(codigoCurso).orElseThrow(() -> new IdDoCursoNaoExisteException(codigoCurso));
+        if(cursoReqAtualizar.getNomeCurso() == null) {
+            cursoReqAtualizar.setNomeCurso(cursoOptional.getNomeCurso());
+        }
+        if(cursoReqAtualizar.getDuracao() == null) {
+            cursoReqAtualizar.setDuracao(cursoOptional.getDuracao());
+        }
+        if(cursoReqAtualizar.getNumeroAlunos() == null) {
+            cursoReqAtualizar.setNumeroAlunos(cursoOptional.getNumeroAlunos());
+        }
+        var curso = cursoReqAtualizar.convert(codigoCurso);
+        cursoRepository.save(curso);
+        return ResponseEntity.ok(new CursoResponse(curso));
     }
 
-    private void validarCurso(Curso curso, Curso cursoPesquisado) {
-        if(curso.getNomeCurso() != null) {
-            cursoPesquisado.setNomeCurso(curso.getNomeCurso());
-        }
-        if(curso.getDuracao() != null) {
-            cursoPesquisado.setDuracao(curso.getDuracao());
-        }
-        if(curso.getModalidade() != null) {
-            cursoPesquisado.setModalidade(curso.getModalidade());
-        }
-        if(curso.getCodigoCurso() != null) {
-            cursoPesquisado.setCodigoCurso(curso.getCodigoCurso());
-        }
-        if(curso.getNumeroAlunos() != null) {
-            cursoPesquisado.setNumeroAlunos(curso.getNumeroAlunos());
-        }
-    }
+
 }

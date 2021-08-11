@@ -1,8 +1,11 @@
 package br.com.letscode.controller;
 
-import br.com.letscode.entity.Disciplina;
+import br.com.letscode.request.DisciplinaReqAtualizar;
+import br.com.letscode.request.DisciplinaRequest;
+import br.com.letscode.response.DisciplinaResponse;
 import br.com.letscode.service.DisciplinaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -11,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,28 +25,30 @@ public class DisciplinaController {
 
     private final DisciplinaService disciplinaService;
 
-    @GetMapping
-    private Iterable<Disciplina> buscarDisciplinas() {
+    @GetMapping("/buscarDisciplina")
+    private List<DisciplinaResponse> buscarDisciplinas() {
         return disciplinaService.buscarDisciplinas();
     }
 
-    @GetMapping("/{codigoDisciplina}")
-    private Disciplina buscarPorId(@PathVariable Integer codigoDisciplina) {
+    @GetMapping("/buscarDisciplina/{codigoDisciplina}")
+    private DisciplinaResponse buscarPorId(@PathVariable Integer codigoDisciplina) {
         return disciplinaService.buscarPorId(codigoDisciplina);
     }
 
-    @PostMapping
-    private Disciplina adicionarDisciplina(@RequestBody Disciplina disciplina) {
-        return disciplinaService.adicionarDisciplina(disciplina);
+    @PostMapping("/adicionarDisciplina")
+    private ResponseEntity<DisciplinaResponse> adicionarDisciplina(@RequestBody DisciplinaRequest disciplinaRequest,
+                                                                   UriComponentsBuilder uriComponentsBuilder) {
+        return disciplinaService.adicionarDisciplina(disciplinaRequest, uriComponentsBuilder);
     }
 
-    @DeleteMapping("/{codigoDisciplina}")
-    private void deletarDisciplina(@PathVariable Integer codigoDisciplina) {
-        disciplinaService.deletarDisciplina(codigoDisciplina);
+    @DeleteMapping("/deletarDisciplina/{codigoDisciplina}")
+    private ResponseEntity<?> deletarDisciplina(@PathVariable Integer codigoDisciplina) {
+        return disciplinaService.deletarDisciplina(codigoDisciplina);
     }
 
-    @PatchMapping("/{codigoDisciplina}")
-    private Disciplina atualizarDisciplina(@RequestBody Disciplina disciplina, @PathVariable Integer codigoDisciplina) {
+    @PatchMapping("/atualizarDisciplina/{codigoDisciplina}")
+    private ResponseEntity<DisciplinaResponse> atualizarDisciplina(@RequestBody DisciplinaReqAtualizar disciplina,
+                                                                   @PathVariable Integer codigoDisciplina) {
         return disciplinaService.atualizarDisciplina(disciplina, codigoDisciplina);
     }
 }

@@ -1,10 +1,16 @@
 package br.com.letscode.service;
 
-import br.com.letscode.entity.Disciplina;
 import br.com.letscode.exception.IdDaDisciplinaNaoExisteException;
 import br.com.letscode.repository.DisciplinaRepository;
+import br.com.letscode.request.DisciplinaReqAtualizar;
+import br.com.letscode.request.DisciplinaRequest;
+import br.com.letscode.response.DisciplinaResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -12,49 +18,53 @@ public class DisciplinaService {
 
     private final DisciplinaRepository disciplinaRepository;
 
-    public Iterable<Disciplina> buscarDisciplinas() {
-        return disciplinaRepository.findAll();
+    public List<DisciplinaResponse> buscarDisciplinas() {
+        var disciplina = disciplinaRepository.findAll();
+        return DisciplinaResponse.convert(disciplina);
     }
 
-    public Disciplina buscarPorId(Integer codigoDisciplina) {
-        return disciplinaRepository.findById(codigoDisciplina)
+    public DisciplinaResponse buscarPorId(Integer codigoDisciplina) {
+        var disciplina = disciplinaRepository.findById(codigoDisciplina)
                 .orElseThrow(() -> new IdDaDisciplinaNaoExisteException(codigoDisciplina));
+        return new DisciplinaResponse(disciplina);
     }
 
 
-    public Disciplina adicionarDisciplina(Disciplina disciplina) {
-        return disciplinaRepository.save(disciplina);
+    public ResponseEntity<DisciplinaResponse> adicionarDisciplina(DisciplinaRequest disciplinaRequest,
+                                                                  UriComponentsBuilder uriComponentsBuilder) {
+        var disciplina = disciplinaRequest.convert();
+        disciplinaRepository.save(disciplina);
+        var uri = uriComponentsBuilder.path("/buscarDisciplina/{codigoDisciplina}").buildAndExpand(disciplina
+                .getCodigoDisciplina()).toUri();
+        return ResponseEntity.created(uri).body(new DisciplinaResponse(disciplina));
     }
 
 
-    public void deletarDisciplina(Integer codigoDisciplina) {
+    public ResponseEntity<?> deletarDisciplina(Integer codigoDisciplina) {
         if(disciplinaRepository.findById(codigoDisciplina).isPresent()) {
             disciplinaRepository.deleteById(codigoDisciplina);
+            return ResponseEntity.ok().build();
         } else {
             throw new IdDaDisciplinaNaoExisteException(codigoDisciplina);
         }
     }
 
 
-    public Disciplina atualizarDisciplina(Disciplina disciplina, Integer codigoDisciplina) {
-        var disciplinaPesquisada = disciplinaRepository.findById(codigoDisciplina)
-                .orElseThrow(() -> new IdDaDisciplinaNaoExisteException(codigoDisciplina));
-        validarDisciplina(disciplina, disciplinaPesquisada);
-        return disciplinaRepository.save(disciplinaPesquisada);
-    }
-
-    private void validarDisciplina(Disciplina disciplina, Disciplina disciplinaPesquisada) {
-        if(disciplina.getNomeDisciplina() != null) {
-            disciplinaPesquisada.setNomeDisciplina(disciplina.getNomeDisciplina());
+    public ResponseEntity<DisciplinaResponse> atualizarDisciplina(DisciplinaReqAtualizar disciplinaReqAtualizar,
+                                                                  Integer codigoDisciplina) {
+        var disciplinaOptional = disciplinaRepository.findById(codigoDisciplina).orElseThrow(() ->
+                new IdDaDisciplinaNaoExisteException(codigoDisciplina));
+        if(disciplinaReqAtualizar.getNomeDisciplina() == null) {
+            disciplinaReqAtualizar.setNomeDisciplina(disciplinaOptional.getNomeDisciplina());
         }
-        if(disciplina.getCodigoDisciplina() != null) {
-            disciplinaPesquisada.setCodigoDisciplina(disciplina.getCodigoDisciplina());
+        if(disciplinaReqAtualizar.getCargaPratica() == null) {
+            disciplinaReqAtualizar.setCargaPratica(disciplinaOptional.getCargaPratica());
         }
-        if(disciplina.getCargaPratica() != null) {
-            disciplinaPesquisada.setCargaPratica(disciplina.getCargaPratica());
+        if(disciplinaReqAtualizar.getCargaTeorica() == null) {
+            disciplinaReqAtualizar.setCargaTeorica(disciplinaOptional.getCargaTeorica());
         }
-        if(disciplina.getCargaTeorica() != null) {
-            disciplinaPesquisada.setCargaTeorica(disciplina.getCargaTeorica());
-        }
+        var disciplina = disciplinaReqAtualizar.convert(codigoDisciplina);
+        disciplinaRepository.save(disciplina);
+        return ResponseEntity.ok(new DisciplinaResponse(disciplina));
     }
 }
